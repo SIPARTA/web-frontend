@@ -1,0 +1,17 @@
+▲ Next.js 16.1.4 (Turbopack)
+- Environments: .env.local
+
+  Running TypeScript ...
+Failed to compile.
+
+./src/pages/dashboard.tsx:145:25
+Type error: Cannot find name 'shortAddress'.
+
+[0m [90m 143 |[39m
+ [90m 144 |[39m     [36mconst[39m activeLabel [33m=[39m account
+[31m[1m>[22m[39m[90m 145 |[39m         [33m?[39m [32m`MetaMask • ${shortAddress}`[39m
+ [90m     |[39m                         [31m[1m^[22m[39m
+ [90m 146 |[39m         [33m:[39m web2User[33m?[39m[33m.[39memail
+ [90m 147 |[39m             [33m?[39m [32m`Email • ${web2User.email}`[39m
+ [90m 148 |[39m             [33m:[39m [32m"Web2 User"[39m[33m;[39m[0m
+Next.js build worker exited with code: 1 and signal: null

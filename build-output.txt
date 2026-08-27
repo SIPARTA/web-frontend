@@ -1,0 +1,32 @@
+
+> thirdweb-amoy-auth@0.1.0 build
+> next build
+
+▲ Next.js 16.1.4 (Turbopack)
+- Environments: .env.local
+
+  Running TypeScript ...
+  Creating an optimized production build ...
+✓ Compiled successfully in 10.0s
+  Collecting page data using 15 workers ...
+  Generating static pages using 15 workers (0/7) ...
+  Generating static pages using 15 workers (1/7) 
+  Generating static pages using 15 workers (3/7) 
+  Generating static pages using 15 workers (5/7) 
+✓ Generating static pages using 15 workers (7/7) in 5.4s
+  Finalizing page optimization ...
+
+Route (pages)
+┌ ○ / (4709 ms)
+├   /_app
+├ ○ /404
+├ ƒ /api/chat
+├ ƒ /api/hello
+├ ○ /blockchain (4860 ms)
+├ ○ /dashboard (4704 ms)
+├ ○ /signin (4713 ms)
+└ ○ /signup (4707 ms)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -1,0 +1,50 @@
+
+> thirdweb-amoy-auth@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.9:3000
+- Environments: .env.local
+
+✓ Starting...
+✓ Ready in 1990ms
+ GET / 200 in 1248ms (compile: 1153ms, render: 96ms)
+ GET / 200 in 82ms (compile: 15ms, render: 67ms)
+ GET / 200 in 103ms (compile: 14ms, render: 89ms)
+✓ Compiled in 126ms
+✓ Compiled in 144ms
+ GET / 200 in 305ms (compile: 207ms, render: 98ms)
+○ Compiling /blockchain ...
+✓ Compiled in 115ms
+✓ Compiled in 110ms
+✓ Compiled in 89ms
+✓ Compiled in 127ms
+✓ Compiled in 124ms
+✓ Compiled in 82ms
+ GET / 200 in 266ms (compile: 191ms, render: 76ms)
+✓ Compiled in 92ms
+✓ Compiled in 87ms
+ GET / 200 in 259ms (compile: 176ms, render: 82ms)
+✓ Compiled in 375ms
+✓ Compiled in 122ms
+✓ Compiled in 119ms
+✓ Compiled in 109ms
+ GET / 200 in 249ms (compile: 173ms, render: 76ms)
+ GET / 200 in 58ms (compile: 9ms, render: 49ms)
+ HEAD /blockchain 200 in 8.1s (compile: 8.1s, render: 34ms)
+✓ Compiled in 178ms
+✓ Compiled in 110ms
+✓ Compiled in 101ms
+✓ Compiled in 117ms
+✓ Compiled in 79ms
+✓ Compiled in 110ms
+▲ Next.js 16.1.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.9:3000
+- Environments: .env.local
+
+✓ Starting...
+✓ Ready in 2.2s
+○ Compiling / ...
+ GET / 200 in 4.7s (compile: 4.6s, render: 146ms)
