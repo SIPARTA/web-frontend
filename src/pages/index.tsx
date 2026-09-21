@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 const metrics = [
-  { label: "Cakupan awal", value: "6 bahan" },
-  { label: "Fokus sistem", value: "Risiko campuran" },
+  { label: "Dataset gas", value: "8 jenis" },
+  { label: "Sensor aktif", value: "4 komponen" },
   { label: "Akses tambahan", value: "MetaMask" },
 ];
 
