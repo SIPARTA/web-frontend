@@ -8,7 +8,7 @@
  *   RPi → FastAPI → Supabase → Realtime WebSocket → Halaman ini
  */
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -156,9 +156,15 @@ function IncidentCard({ incident }: { incident: IncidentEvent }) {
 
       {/* AI Analysis (collapsible) */}
       {incident.ai_analysis_text && (
-        <p className="mt-3 rounded-md border border-dashed px-3 py-2 text-xs leading-5" style={{ color: "var(--muted)", borderColor: "var(--border-soft)" }}>
-          🤖 {incident.ai_analysis_text}
-        </p>
+        <div className="mt-3 rounded-md border border-dashed px-3 py-2 text-xs leading-5" style={{ backgroundColor: "var(--surface-soft)", borderColor: "var(--border-soft)" }}>
+          <p style={{ color: "var(--section-title)" }}>
+            <strong>AI Keselamatan SIPARTA:</strong><br/>
+            <span style={{ color: "var(--muted)" }}>{incident.ai_analysis_text}</span>
+          </p>
+          <p className="mt-2 text-[10px] italic" style={{ color: "var(--danger)" }}>
+            *Rekomendasi AI adalah panduan pendukung. Selalu utamakan penilaian situasi aktual dan protokol keselamatan resmi.
+          </p>
+        </div>
       )}
 
       <p className="mt-3 text-right text-[10px]" style={{ color: "var(--muted)" }}>
@@ -176,7 +182,6 @@ export default function MonitoringPage() {
   const [error, setError] = useState<string | null>(null);
   const [connected, setConnected] = useState(false);
   const [filter, setFilter] = useState<"ALL" | "BAHAYA" | "WASPADA" | "AMAN">("ALL");
-  const channelRef = useRef<ReturnType<any> | null>(null);
 
   // Fetch data dari Supabase via backend API
   const fetchIncidents = useCallback(async () => {
@@ -186,8 +191,10 @@ export default function MonitoringPage() {
       const data: IncidentEvent[] = await res.json();
       setIncidents(data);
       setError(null);
+      setConnected(true);
     } catch (err: any) {
       setError(err.message || "Gagal memuat data insiden.");
+      setConnected(false);
     } finally {
       setLoading(false);
     }
@@ -199,7 +206,6 @@ export default function MonitoringPage() {
 
     // Polling fallback setiap 10 detik (jika Realtime belum dikonfigurasi)
     const interval = setInterval(fetchIncidents, 10_000);
-    setConnected(true);
 
     return () => {
       clearInterval(interval);
