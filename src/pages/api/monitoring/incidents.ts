@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const { data, error } = await supabase
       .from("incident_events")
-      .select("id, incident_type, severity, sensor_data, image_url, ai_analysis_text, timestamp, is_anchored")
+      .select("id, incident_type, severity, sensor_data, image_url, ai_analysis_text, timestamp, is_anchored, iot_devices(name), audit_log(ipfs_cid, action)")
       .order("timestamp", { ascending: false })
       .limit(100);
 

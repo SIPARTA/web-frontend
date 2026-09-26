@@ -29,6 +29,8 @@ interface IncidentEvent {
   ai_analysis_text?: string | null;
   timestamp: string;
   is_anchored: boolean;
+  iot_devices?: { name: string } | null;
+  audit_log?: { ipfs_cid: string; action: string }[] | { ipfs_cid: string; action: string } | null;
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -139,6 +141,24 @@ function IncidentCard({ incident }: { incident: IncidentEvent }) {
         </div>
       </div>
 
+      {/* Audit Info & Device */}
+      <div className="mt-3 flex flex-wrap justify-between items-center text-[10px]" style={{ color: "var(--muted)" }}>
+        <span className="font-semibold">Device: {incident.iot_devices?.name || "Offline Sensor"}</span>
+        {incident.audit_log && (
+          <span className="flex gap-1 items-center">
+            CID: 
+            <a 
+              href={`https://ipfs.io/ipfs/${Array.isArray(incident.audit_log) ? incident.audit_log[0]?.ipfs_cid : (incident.audit_log as any).ipfs_cid}`}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline font-mono"
+            >
+              {Array.isArray(incident.audit_log) ? incident.audit_log[0]?.ipfs_cid?.substring(0, 12) : (incident.audit_log as any).ipfs_cid?.substring(0, 12)}...
+            </a>
+          </span>
+        )}
+      </div>
+
       {/* Sensor Values */}
       <div className="mt-3 grid grid-cols-4 gap-2">
         {Object.entries(SENSOR_LABELS).map(([key, label]) => {
@@ -181,6 +201,7 @@ export default function MonitoringPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [connected, setConnected] = useState(false);
+  const [devices, setDevices] = useState<{id: string, name: string, is_active: boolean, last_seen: string | null}[]>([]);
   const [filter, setFilter] = useState<"ALL" | "BAHAYA" | "WASPADA" | "AMAN">("ALL");
 
   // Fetch data dari Supabase via backend API
@@ -191,10 +212,8 @@ export default function MonitoringPage() {
       const data: IncidentEvent[] = await res.json();
       setIncidents(data);
       setError(null);
-      setConnected(true);
     } catch (err: any) {
       setError(err.message || "Gagal memuat data insiden.");
-      setConnected(false);
     } finally {
       setLoading(false);
     }
@@ -203,9 +222,32 @@ export default function MonitoringPage() {
   // Subscribe ke Supabase Realtime via server-side hook
   useEffect(() => {
     fetchIncidents();
+    
+    // Fungsi untuk cek status koneksi perangkat IoT aktual
+    const checkDeviceStatus = async () => {
+      try {
+        const res = await fetch("/api/monitoring/status");
+        if (res.ok) {
+          const data = await res.json();
+          setConnected(data.online);
+          setDevices(data.devices || []);
+        } else {
+          setConnected(false);
+          setDevices([]);
+        }
+      } catch (e) {
+        setConnected(false);
+        setDevices([]);
+      }
+    };
+    
+    checkDeviceStatus();
 
     // Polling fallback setiap 10 detik (jika Realtime belum dikonfigurasi)
-    const interval = setInterval(fetchIncidents, 10_000);
+    const interval = setInterval(() => {
+      fetchIncidents();
+      checkDeviceStatus();
+    }, 10_000);
 
     return () => {
       clearInterval(interval);
@@ -243,6 +285,29 @@ export default function MonitoringPage() {
 
       {/* Stats */}
       <StatsBar incidents={incidents} />
+
+      {/* IoT Devices Status */}
+      {devices.length > 0 && (
+        <section className="soft-panel">
+          <h2 className="text-sm font-semibold" style={{ color: "var(--section-title)" }}>Status Perangkat IoT</h2>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {devices.map(dev => (
+              <div key={dev.id} className="flex flex-col gap-1 rounded-md border p-3 text-xs" style={{ borderColor: "var(--border-soft)", backgroundColor: "var(--bg-default)" }}>
+                <div className="flex justify-between items-center font-semibold" style={{ color: "var(--text-default)" }}>
+                  <span>{dev.name}</span>
+                  <span className={`px-2 py-0.5 rounded text-[9px] font-bold tracking-wider ${dev.is_active ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-600'}`}>
+                    {dev.is_active ? 'ONLINE' : 'OFFLINE'}
+                  </span>
+                </div>
+                <div className="flex justify-between text-[10px]" style={{ color: "var(--muted)" }}>
+                  <span>ID: {dev.id.substring(0,8)}...</span>
+                  <span>Seen: {dev.last_seen ? formatTime(dev.last_seen) : 'Never'}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Filter */}
       <div className="flex flex-wrap gap-2">
